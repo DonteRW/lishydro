@@ -5,7 +5,7 @@ endif
 
 if (! -d $LISHYDRO_DIR) then
    echo "Error:  $LISHYDRO_DIR directory does not exist."
-   exit
+   exit 1
 endif
 
 source $LISHYDRO_DIR/modules/modules.discover.intel14
@@ -38,4 +38,6 @@ setenv NETCDF $LIS_NETCDF
 
 # needed by LIS and WRF-Hydro
 setenv ESMFMKFILE $LIS_LIBESMF/esmf.mk
+setenv WRF_HYDRO 1
 
+exit 0

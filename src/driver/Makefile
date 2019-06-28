@@ -26,6 +26,20 @@ include $(ESMFMKFILE)
 
 COMMA := ,
 
+### LIS-Hydro Build Directives ###
+LISHYDRO_OPTLEVEL = 1
+LISHYDRO_PRCLEVEL = 2
+
+ifdef LISHYDRO_OPTLEVEL
+ ESMF_F90COMPILECPPFLAGS += -DLISHYDRO_OPTLEVEL=$(LISHYDRO_OPTLEVEL)
+ ESMF_CXXCOMPILECPPFLAGS += -DLISHYDRO_OPTLEVEL=$(LISHYDRO_OPTLEVEL)
+endif
+
+ifdef LISHYDRO_PRCLEVEL
+ ESMF_F90COMPILECPPFLAGS += -DLISHYDRO_PRCLEVEL=$(LISHYDRO_PRCLEVEL)
+ ESMF_CXXCOMPILECPPFLAGS += -DLISHYDRO_PRCLEVEL=$(LISHYDRO_PRCLEVEL)
+endif
+
 ### LIS dependencies ###
 include $(LISHYDRO_LIS_INST)/lis.mk
 DEP_FRONTS    := $(DEP_FRONTS) -DFRONT_LND=$(ESMF_DEP_FRONT)
@@ -66,12 +80,13 @@ DEP_SHRD_LIBS := $(DEP_SHRD_LIBS) $(addprefix -l, $(ESMF_DEP_SHRD_LIBS))
 
 
 # -----------------------------------------------------------------------------
-LISHydroApp: app.o driver.o mediator.o
+LISHydroApp: app.o driver.o mediator.o fields.o
 	$(ESMF_F90LINKER) $(ESMF_F90LINKOPTS) $(ESMF_F90LINKPATHS) $(ESMF_F90LINKRPATHS) -o $@ $^ $(ESMF_F90ESMFLINKLIBS) $(DEP_LINK_OBJS) $(DEP_SHRD_PATH) $(DEP_SHRD_LIBS)
 
 # module dependencies:
 app.o: driver.o
 driver.o: mediator.o
+mediator.o: fields.o
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
